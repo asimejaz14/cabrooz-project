@@ -81,7 +81,6 @@ class UserController:
             print("User Not Updated", e)
             return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', 'User not updated'))
 
-
     def delete_user(self, request):
         try:
             record_id = get_default_param(request, 'record_id', None)
