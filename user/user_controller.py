@@ -34,8 +34,8 @@ class UserController:
                     print("USER LISTING EXCEPTION", e)
                     return Response(create_message(HTTP_404_NOT_FOUND, 'Error', 'User not found'))
 
-            users = User.objects.filter(status__in=1).order_by(sort_by)
-            serialized_user = UserSerializer(users, many=True)
+            users = User.objects.filter(status=1).order_by(sort_by)
+            serialized_user = UserSerializer(users, context={'request': request}, many=True)
             return Response(create_message(HTTP_200_OK, 'Success', serialized_user.data))
         except Exception as e:
             print("USER LISTING EXCEPTION", e)
