@@ -27,15 +27,15 @@ class UserController:
 
             if id:
                 try:
-                    user = User.objects.get(id=id)
-                    serialized_user = UserSerializer(user)
+                    user = User.objects.get(pk=id)
+                    serialized_user = UserSerializer(user, context={'request': request})
                     return Response(create_message(HTTP_200_OK, 'Success', serialized_user.data))
                 except Exception as e:
                     print("USER LISTING EXCEPTION", e)
                     return Response(create_message(HTTP_404_NOT_FOUND, 'Error', 'User not found'))
 
             users = User.objects.filter(status=1).order_by(sort_by)
-            serialized_user = UserSerializer(users, many=True)
+            serialized_user = UserSerializer(users, context={'request': request}, many=True)
             return Response(create_message(HTTP_200_OK, 'Success', serialized_user.data))
         except Exception as e:
             print("USER LISTING EXCEPTION", e)
@@ -46,6 +46,8 @@ class UserController:
             if request.data.get('password'):
                 request.POST._mutable = True
                 request.data['password'] = make_password(request.data.get('password'))
+                request.data['status_id'] = 1
+                request.data['type_id'] = 4
                 request.POST._mutable = False
             serialized_user = UserSerializer(data=request.data, context={'request': request})
             if serialized_user.is_valid():

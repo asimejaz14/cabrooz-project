@@ -9,6 +9,12 @@ from Cabrooz_App import settings
 class UserSerializer(serializers.ModelSerializer):
 
     profile_picture = serializers.SerializerMethodField(required=False)
+    cnic_front = serializers.SerializerMethodField(required=False)
+    cnic_back = serializers.SerializerMethodField(required=False)
+    license_front = serializers.SerializerMethodField(required=False)
+    license_back = serializers.SerializerMethodField(required=False)
+    type_id = serializers.CharField(max_length=200, allow_null=True, allow_blank=True)
+    status_id = serializers.CharField(max_length=200, allow_null=True, allow_blank=True)
 
     def get_profile_picture(self, obj):
         try:
@@ -22,18 +28,129 @@ class UserSerializer(serializers.ModelSerializer):
                     elif os.path.exists("media/users/profile_images/" + str(req.data.get('image'))):
                         obj.profile_image = 'users/profile_images/' + str(req.data.get('image'))
                         obj.save()
-                        return self.context['request'].build_absolute_uri(obj.profile_image.ur)
+                        return self.context['request'].build_absolute_uri(obj.profile_image.url)
                 else:
                     obj.profile_image = None
                     obj.save()
+            elif self.context['request'].method == 'GET':
+                try:
+                    return self.context['request'].build_absolute_uri(obj.profile_image.url)
+                except:
+                    self.context['request'].build_absolute_uri(obj['profile_image']['url'])
 
         except Exception as e:
             print("IMAGE NOT SAVED", e)
 
 
+    def get_cnic_front(self, obj):
+        try:
+            if self.context['request'].method == 'POST' or self.context['request'].method == 'PATCH':
+                req = self.context['request']
+                if req.data.get('cnic_front'):
+                    if not os.path.exists("media/users/documents/" + str(req.data.get('cnic_front'))):
+                        obj.cnic_front = req.data.get('cnic_front')
+                        obj.save()
+                        return self.context['request'].build_absolute_uri(obj.cnic_front.url)
+                    elif os.path.exists("media/users/profile_images/" + str(req.data.get('cnic_front'))):
+                        obj.cnic_front = 'users/profile_images/' + str(req.data.get('cnic_front'))
+                        obj.save()
+                        return self.context['request'].build_absolute_uri(obj.cnic_front.url)
+                else:
+                    obj.cnic_front = None
+                    obj.save()
+            elif self.context['request'].method == 'GET':
+                try:
+                    return self.context['request'].build_absolute_uri(obj.cnic_front.url)
+                except:
+                    self.context['request'].build_absolute_uri(obj['cnic_front']['url'])
+
+        except Exception as e:
+            print("IMAGE NOT SAVED", e)
+
+    def get_cnic_back(self, obj):
+        try:
+            if self.context['request'].method == 'POST' or self.context['request'].method == 'PATCH':
+                req = self.context['request']
+                if req.data.get('cnic_back'):
+                    if not os.path.exists("media/users/documents/" + str(req.data.get('cnic_back'))):
+                        obj.cnic_back = req.data.get('cnic_back')
+                        obj.save()
+                        return self.context['request'].build_absolute_uri(obj.cnic_back.url)
+                    elif os.path.exists("media/users/documents/" + str(req.data.get('cnic_back'))):
+                        obj.cnic_back = 'users/documents/' + str(req.data.get('cnic_back'))
+                        obj.save()
+                        return self.context['request'].build_absolute_uri(obj.cnic_back.url)
+                else:
+                    obj.cnic_back = None
+                    obj.save()
+            elif self.context['request'].method == 'GET':
+                try:
+                    return self.context['request'].build_absolute_uri(obj.cnic_back.url)
+                except:
+                    self.context['request'].build_absolute_uri(obj['cnic_back']['url'])
+
+        except Exception as e:
+            print("IMAGE NOT SAVED", e)
+
+    def get_license_front(self, obj):
+        try:
+            if self.context['request'].method == 'POST' or self.context['request'].method == 'PATCH':
+                req = self.context['request']
+                if req.data.get('license_front'):
+                    if not os.path.exists("media/users/documents/" + str(req.data.get('license_front'))):
+                        obj.license_front = req.data.get('license_front')
+                        obj.save()
+                        return self.context['request'].build_absolute_uri(obj.license_front.url)
+                    elif os.path.exists("media/users/documents/" + str(req.data.get('license_front'))):
+                        obj.license_front = 'users/documents/' + str(req.data.get('license_front'))
+                        obj.save()
+                        return self.context['request'].build_absolute_uri(obj.license_front.url)
+                else:
+                    obj.license_front = None
+                    obj.save()
+            elif self.context['request'].method == 'GET':
+                try:
+                    return self.context['request'].build_absolute_uri(obj.license_front.url)
+                except:
+                    self.context['request'].build_absolute_uri(obj['license_front']['url'])
+
+        except Exception as e:
+            print("IMAGE NOT SAVED", e)
+
+
+    def get_license_back(self, obj):
+        try:
+            if self.context['request'].method == 'POST' or self.context['request'].method == 'PATCH':
+                req = self.context['request']
+                if req.data.get('license_back'):
+                    if not os.path.exists("media/users/documents/" + str(req.data.get('license_back'))):
+                        obj.license_back = req.data.get('license_back')
+                        obj.save()
+                        return self.context['request'].build_absolute_uri(obj.license_back.url)
+                    elif os.path.exists("media/users/documents/" + str(req.data.get('license_back'))):
+                        obj.license_back = 'users/documents/' + str(req.data.get('license_back'))
+                        obj.save()
+                        return self.context['request'].build_absolute_uri(obj.license_back.url)
+                else:
+                    obj.license_back = None
+                    obj.save()
+            elif self.context['request'].method == 'GET':
+                try:
+                    return self.context['request'].build_absolute_uri(obj.license_back.url)
+                except:
+                    self.context['request'].build_absolute_uri(obj['license_back']['url'])
+
+        except Exception as e:
+            print("IMAGE NOT SAVED", e)
+
+
+
+
+
     class Meta:
         model = User
         fields = [
+            'id',
             'first_name',
             'last_name',
             'email',
@@ -42,5 +159,11 @@ class UserSerializer(serializers.ModelSerializer):
             'profile_picture',
             'phone_number',
             'username',
+            'status_id',
+            'type_id',
+            'cnic_front',
+            'cnic_back',
+            'license_front',
+            'license_back',
         ]
 

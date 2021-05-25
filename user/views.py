@@ -17,7 +17,7 @@ class UserAPIView(APIView):
     user_controller = UserController()
 
     def get(self, request, id=None):
-        return self.user_controller.get_user(request, id=None)
+        return self.user_controller.get_user(request, id)
 
     def post(self, request):
         return self.user_controller.create_user(request)
