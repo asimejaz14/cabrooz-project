@@ -15,11 +15,15 @@ class User(AbstractUser):
     profile_image = models.ImageField(upload_to='media/user/profile_images/', blank=True, null=True)
     phone_number = PhoneNumberField(unique=True, max_length=200, null=True, blank=True)
     username = models.CharField(unique=True, max_length=200, null=True, blank=True)
-    status = models.ForeignKey(Option, on_delete=DO_NOTHING, related_name='status_id', max_length=200, blank=True, null=True, default=1)
+    status = models.ForeignKey(Option, on_delete=DO_NOTHING, related_name='status_id', max_length=200, blank=True, null=True)
     created_datetime = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_datetime = models.DateTimeField(auto_now=True, null=True, blank=True)
     password = models.CharField(max_length=200, null=True, blank=True)
     type = models.ForeignKey(Option, on_delete=DO_NOTHING, related_name='type_id', null=True, blank=True)
+    cnic_front = models.ImageField(upload_to='media/user/documents/', blank=True, null=True)
+    cnic_back = models.ImageField(upload_to='media/user/documents/', blank=True, null=True)
+    license_front = models.ImageField(upload_to='media/user/documents/', blank=True, null=True)
+    license_back = models.ImageField(upload_to='media/user/documents/', blank=True, null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'username']
