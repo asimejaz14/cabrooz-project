@@ -37,15 +37,14 @@ class UserLoginAPIView(APIView):
         try:
             email_ = request.data.get('email')
             password_ = request.data.get('password')
-
             user = authenticate(email=email_, password=password_)
             if user:
                 token, created = Token.objects.get_or_create(user=user)
                 if created:
-                    return Response(create_message(HTTP_201_CREATED, 'Success', 'User logged in successfully'))
+                    token_ = Token.objects.get(user=user)
+                    return Response(create_message(HTTP_201_CREATED, 'Success', str(token_)))
                 elif token:
-                    return Response(create_message(HTTP_201_CREATED, 'Success', 'User logged in successfully'))
-
+                    return Response(create_message(HTTP_201_CREATED, 'Success', str(token)))
         except Exception as e:
             print("USER LOGIN EXCEPTION", e)
             return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', 'Invalid email/password'))
