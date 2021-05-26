@@ -1,5 +1,6 @@
 import os
 
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from .models import User
 
@@ -15,6 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
     license_back = serializers.SerializerMethodField(required=False)
     type_id = serializers.CharField(max_length=200, allow_null=True, allow_blank=True)
     status_id = serializers.CharField(max_length=200, allow_null=True, allow_blank=True)
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
 
     def get_profile_picture(self, obj):
         try:
@@ -165,5 +167,6 @@ class UserSerializer(serializers.ModelSerializer):
             'cnic_back',
             'license_front',
             'license_back',
+            'password',
         ]
 

@@ -35,10 +35,10 @@ class UserLoginAPIView(APIView):
 
     def post(self, request):
         try:
-            email = request.data.get('email')
-            password = request.data.get('password')
+            email_ = request.data.get('email')
+            password_ = request.data.get('password')
 
-            user = authenticate(email=email, password=password)
+            user = authenticate(email=email_, password=password_)
             if user:
                 token, created = Token.objects.get_or_create(user=user)
                 if created:
@@ -48,7 +48,7 @@ class UserLoginAPIView(APIView):
 
         except Exception as e:
             print("USER LOGIN EXCEPTION", e)
-            return Response(HTTP_400_BAD_REQUEST, 'Error', 'Invalid email/password')
+            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', 'Invalid email/password'))
 
 
 class SignupAPIView(APIView):
@@ -57,3 +57,11 @@ class SignupAPIView(APIView):
 
     def post(self, request):
         return self.user_controller_obj.user_signup(request)
+
+
+class UserLogoutAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    user_controller_obj = UserController()
+
+    def post(self, request):
+        return self.user_controller_obj.user_logout(request)

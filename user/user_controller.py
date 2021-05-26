@@ -41,26 +41,6 @@ class UserController:
             print("USER LISTING EXCEPTION", e)
             return Response(create_message(HTTP_404_NOT_FOUND, 'Error', 'User not found'))
 
-    def create_user(self, request):
-        try:
-            if request.data.get('password'):
-                request.POST._mutable = True
-                request.data['password'] = make_password(request.data.get('password'))
-                request.data['status_id'] = 1
-                request.data['type_id'] = 4
-                request.POST._mutable = False
-            serialized_user = UserSerializer(data=request.data, context={'request': request})
-            if serialized_user.is_valid():
-                serialized_user.save()
-                return Response(create_message(HTTP_201_CREATED, 'Success', serialized_user.data))
-            else:
-                print("User Not Added")
-
-                print(serialized_user.errors)
-                return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', 'User not created'))
-        except Exception as e:
-            print("User Not Added", e)
-            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', 'User not created'))
 
     def update_user(self, request, id):
         try:
@@ -101,15 +81,16 @@ class UserController:
 
     def user_signup(self, request):
         try:
-            if request.data.get('password'):
-                request.POST._mutable = True
-                request.data['password'] = make_password(request.data.get('password'))
-                request.data['status_id'] = 1
-                request.data['type_id'] = 4
-                request.POST._mutable = False
+            request.POST._mutable = True
+            request.data['status_id'] = 1
+            request.data['password'] = make_password(request.data.get('password'))
+            request.POST._mutable = False
             serialized_user = UserSerializer(data=request.data, context={'request': request})
             if serialized_user.is_valid():
                 serialized_user.save()
+                user = User.objects.get(email=request.data.get('email'))
+                user.set_password(request.data.get('password'))
+                user.save()
                 return Response(create_message(HTTP_201_CREATED, 'Success', serialized_user.data))
             else:
                 print("User Not Added")
@@ -119,3 +100,11 @@ class UserController:
         except Exception as e:
             print("User Not Added", e)
             return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', 'User not created'))
+
+    def user_logout(self, request):
+        try:
+            request.user.auth_token.delete()
+            return Response(create_message(HTTP_200_OK, 'Success', 'User logged out successfully'))
+        except Exception as e:
+            print("USER LOGOUT EXCEPTION", e)
+            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', 'User not logged out'))
