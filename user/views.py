@@ -8,25 +8,26 @@ from rest_framework.views import APIView
 
 
 # Create your views here.
-from user.user_controller import UserController
+from .user_controller import UserController
 from user.utils import create_message
 
 
 class UserAPIView(APIView):
     permission_classes = [IsAuthenticated]
-    user_controller = UserController()
+    user_controller_obj = UserController()
+
 
     def get(self, request, id=None):
-        return self.user_controller.get_user(request, id)
+        return self.user_controller_obj.get_user(request, id)
 
     def post(self, request):
-        return self.user_controller.create_user(request)
+        return self.user_controller_obj.create_user(request)
 
-    def patch(self, request, id):
-        return self.user_controller.update_user(request, id)
+    def patch(self, request, id=None):
+        return self.user_controller_obj.update_user(request, id)
 
     def delete(self, request):
-        return self.user_controller.delete_user(request)
+        return self.user_controller_obj.delete_user(request)
 
 
 class UserLoginAPIView(APIView):
@@ -47,5 +48,12 @@ class UserLoginAPIView(APIView):
 
         except Exception as e:
             print("USER LOGIN EXCEPTION", e)
-            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', 'Invalid email/password'))
+            return Response(HTTP_400_BAD_REQUEST, 'Error', 'Invalid email/password')
 
+
+class SignupAPIView(APIView):
+    permission_classes = [AllowAny,]
+    user_controller_obj = UserController()
+
+    def post(self, request):
+        return self.user_controller_obj.user_signup(request)
