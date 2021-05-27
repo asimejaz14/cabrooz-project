@@ -20,10 +20,10 @@ class User(AbstractUser):
     updated_datetime = models.DateTimeField(auto_now=True, null=True, blank=True)
     password = models.CharField(max_length=200, null=True, blank=True)
     type = models.ForeignKey(Option, on_delete=DO_NOTHING, related_name='type_id', null=True, blank=True)
-    cnic_front = models.ImageField(upload_to='media/user/documents/', blank=True, null=True)
-    cnic_back = models.ImageField(upload_to='media/user/documents/', blank=True, null=True)
-    license_front = models.ImageField(upload_to='media/user/documents/', blank=True, null=True)
-    license_back = models.ImageField(upload_to='media/user/documents/', blank=True, null=True)
+    cnic_front = models.ImageField(upload_to='user/documents/', blank=True, null=True)
+    cnic_back = models.ImageField(upload_to='user/documents/', blank=True, null=True)
+    license_front = models.ImageField(upload_to='user/documents/', blank=True, null=True)
+    license_back = models.ImageField(upload_to='user/documents/', blank=True, null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'username']
