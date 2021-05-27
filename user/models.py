@@ -12,7 +12,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, max_length=200, null=True, blank=True)
     gender = models.CharField(max_length=200, null=True, blank=True)
     country = models.CharField(max_length=200, null=True, blank=True)
-    profile_image = models.ImageField(upload_to='media/user/profile_images/', blank=True, null=True)
+    profile_image = models.ImageField(upload_to='user/profile_images/', blank=True, null=True)
     phone_number = PhoneNumberField(unique=True, max_length=200, null=True, blank=True)
     username = models.CharField(unique=True, max_length=200, null=True, blank=True)
     status = models.ForeignKey(Option, on_delete=DO_NOTHING, related_name='status_id', max_length=200, blank=True, null=True)
