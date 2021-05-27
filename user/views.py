@@ -64,3 +64,11 @@ class UserLogoutAPIView(APIView):
 
     def post(self, request):
         return self.user_controller_obj.user_logout(request)
+
+
+class UserProfileAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    user_controller_obj = UserController()
+
+    def get(self, request):
+        return self.user_controller_obj.get_user_profile(request)

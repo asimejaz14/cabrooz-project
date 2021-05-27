@@ -10,7 +10,7 @@ from rest_framework.status import (HTTP_401_UNAUTHORIZED,
                                    )
 
 from user.models import User
-from user.serializers import UserSerializer
+from user.serializers import UserSerializer, UserProfileSerializer
 from user.utils import create_message, get_default_param
 
 
@@ -108,3 +108,13 @@ class UserController:
         except Exception as e:
             print("USER LOGOUT EXCEPTION", e)
             return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', 'User not logged out'))
+
+    def get_user_profile(self, request):
+        try:
+            user = User.objects.get(email=request.user.email)
+            serialized_user = UserProfileSerializer(user)
+
+            return Response(create_message(HTTP_200_OK, 'Success', serialized_user.data))
+        except Exception as e:
+            print("USER PROFILE EXCEPTION", e)
+            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', e))
