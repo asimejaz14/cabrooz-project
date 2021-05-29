@@ -9,19 +9,15 @@ from rest_framework.views import APIView
 
 # Create your views here.
 from .user_controller import UserController
-from user.utils import create_message
+from Cabrooz_App.utils import create_message
 
 
 class UserAPIView(APIView):
     permission_classes = [IsAuthenticated]
     user_controller_obj = UserController()
 
-
     def get(self, request, id=None):
         return self.user_controller_obj.get_user(request, id)
-
-    def post(self, request):
-        return self.user_controller_obj.create_user(request)
 
     def patch(self, request, id=None):
         return self.user_controller_obj.update_user(request, id)
@@ -72,3 +68,11 @@ class UserProfileAPIView(APIView):
 
     def get(self, request):
         return self.user_controller_obj.get_user_profile(request)
+
+
+class OnlineUserAPIVIEW(APIView):
+    permission_classes = [IsAuthenticated]
+    user_controller_obj = UserController()
+
+    def post(self, request):
+        return self.user_controller_obj.update_user_online(request)

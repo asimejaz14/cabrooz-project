@@ -10,4 +10,5 @@ urlpatterns = [
     path('login/', views.UserLoginAPIView.as_view()),
     path('logout/', views.UserLogoutAPIView.as_view()),
     path('profile/', views.UserProfileAPIView.as_view()),
+    path('update_location/', views.OnlineUserAPIVIEW.as_view()),
 ]

@@ -6,7 +6,7 @@ from rest_framework.status import (
                                    HTTP_400_BAD_REQUEST
                                    )
 
-from user.utils import create_message, get_default_param
+from Cabrooz_App.utils import create_message, get_default_param
 from .models import Vehicle
 from .serializers import VehicleSerializer
 

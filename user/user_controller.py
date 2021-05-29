@@ -7,9 +7,9 @@ from rest_framework.status import (
                                    HTTP_400_BAD_REQUEST
                                    )
 
-from user.models import User
-from user.serializers import UserSerializer, UserProfileSerializer
-from user.utils import create_message, get_default_param
+from user.models import User, OnlineUser
+from user.serializers import UserSerializer, UserProfileSerializer, OnlineUserSerializer
+from Cabrooz_App.utils import create_message, get_default_param, get_distance
 
 
 class UserController:
@@ -17,22 +17,16 @@ class UserController:
         try:
             sort_by = get_default_param(request, 'order_by', 'created_datetime')
             order = get_default_param(request, 'order', 'desc')
+            kwargs = {}
 
             if order == 'asc':
                 pass
             else:
                 sort_by = '-' + sort_by
-
             if id:
-                try:
-                    user = User.objects.get(pk=id)
-                    serialized_user = UserSerializer(user, context={'request': request})
-                    return Response(create_message(HTTP_200_OK, 'Success', serialized_user.data))
-                except Exception as e:
-                    print("USER LISTING EXCEPTION", e)
-                    return Response(create_message(HTTP_404_NOT_FOUND, 'Error', 'User not found'))
+                kwargs['id'] = id
 
-            users = User.objects.filter(status=1).order_by(sort_by)
+            users = User.objects.filter(**kwargs, status=1).order_by(sort_by)
             serialized_user = UserSerializer(users, context={'request': request}, many=True)
             return Response(create_message(HTTP_200_OK, 'Success', serialized_user.data))
         except Exception as e:
@@ -115,4 +109,38 @@ class UserController:
             return Response(create_message(HTTP_200_OK, 'Success', serialized_user.data))
         except Exception as e:
             print("USER PROFILE EXCEPTION", e)
+            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', e))
+
+    def update_user_online(self, request):
+        try:
+            request.POST._META = True
+            user_id = get_default_param(request, 'user', None)
+            longitude = get_default_param(request, 'current_longitude', None)
+            latitude = get_default_param(request, 'current_latitude', None)
+            user = OnlineUser.objects.filter(user_id=user_id).last()
+            if user:
+                try:
+                    distance = get_distance(latitude, longitude, user.current_latitude, user.current_longitude)
+                except Exception as e:
+                    distance = 0
+                    print("DISTANCE CALCULATION EXCEPTION", e)
+                request.data['distance'] = distance
+                request.POST._mutable = False
+                serialized_online_user = OnlineUserSerializer(data=request.data)
+                if serialized_online_user.is_valid():
+                    serialized_online_user.save()
+                    return Response(create_message(HTTP_201_CREATED, 'Success', serialized_online_user.data))
+                else:
+                    raise Exception
+            request.data['distance'] = 0
+            request.POST._mutable = False
+            serialized_online_user = OnlineUserSerializer(data=request.data)
+            if serialized_online_user.is_valid():
+                serialized_online_user.save()
+                return Response(create_message(HTTP_201_CREATED, 'Success', serialized_online_user.data))
+            else:
+                print(serialized_online_user.errors)
+                raise Exception
+        except Exception as e:
+            print("ONLINE USER UPDATE EXCEPTION", e)
             return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', e))

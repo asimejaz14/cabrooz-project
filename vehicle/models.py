@@ -14,7 +14,7 @@ class Vehicle(models.Model):
     vehicle_model = models.CharField(max_length=200, null=True, blank=True)
     vehicle_maker = models.CharField(max_length=200, null=True, blank=True)
     vehicle_category = models.ForeignKey(Option, related_name='vehicle_category_id', on_delete=DO_NOTHING, null=True, blank=True)
-    driver = models.ForeignKey(settings.AUTH_USER_MODEL, unique=True, related_name='driver_id', null=True, blank=True, on_delete=models.DO_NOTHING)
+    driver = models.OneToOneField(settings.AUTH_USER_MODEL, unique=True, related_name='driver_id', null=True, blank=True, on_delete=models.DO_NOTHING)
     status = models.ForeignKey(Option, on_delete=DO_NOTHING, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -2,9 +2,16 @@ import os
 
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from .models import User
+from .models import User, UserWallet, OnlineUser
 
 from Cabrooz_App import settings
+
+
+class UserWalletSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserWallet
+        fields = '__all__'
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -170,8 +177,16 @@ class UserSerializer(serializers.ModelSerializer):
             'password',
         ]
 
+
 class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
         exclude = ['password', 'user_permissions', 'groups', 'is_staff', 'is_active']
+
+
+class OnlineUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OnlineUser
+        fields = '__all__'
