@@ -8,6 +8,9 @@ from option.models import Option
 
 
 # Create your models here.
+from vehicle.models import Vehicle
+
+
 class User(AbstractUser):
     email = models.EmailField(unique=True, max_length=200, null=True, blank=True)
     gender = models.CharField(max_length=200, null=True, blank=True)

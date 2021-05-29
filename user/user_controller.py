@@ -1,8 +1,6 @@
 from django.contrib.auth.hashers import make_password
-from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.status import (HTTP_401_UNAUTHORIZED,
-                                   HTTP_500_INTERNAL_SERVER_ERROR,
+from rest_framework.status import (
                                    HTTP_404_NOT_FOUND,
                                    HTTP_201_CREATED,
                                    HTTP_200_OK,
@@ -50,7 +48,7 @@ class UserController:
                 request.POST._mutable = False
 
             user = User.objects.get(pk=id)
-            serialized_user = UserSerializer(user, data=request.data, context={'request': request})
+            serialized_user = UserSerializer(user, data=request.data, context={'request': request}, partial=True)
             if serialized_user.is_valid():
                 serialized_user.save()
                 return Response(create_message(HTTP_201_CREATED, 'Success', serialized_user.data))

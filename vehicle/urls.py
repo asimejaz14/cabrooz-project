@@ -4,5 +4,6 @@ from . import views
 
 
 urlpatterns = [
-    path('users/', views.VehicleAPIView.as_view()),
+    path('vehicles/', views.VehicleAPIView.as_view()),
+    path('vehicles/<int:id>/', views.VehicleAPIView.as_view()),
 ]
