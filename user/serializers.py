@@ -2,7 +2,7 @@ import os
 
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from .models import User, UserWallet, OnlineUser
+from .models import User, UserWallet, UserLiveLocation, OnlineUser
 
 from Cabrooz_App import settings
 
@@ -183,6 +183,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         exclude = ['password', 'user_permissions', 'groups', 'is_staff', 'is_active']
+
+
+class UserLiveLocationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserLiveLocation
+        fields = '__all__'
 
 
 class OnlineUserSerializer(serializers.ModelSerializer):

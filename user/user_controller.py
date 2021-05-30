@@ -7,8 +7,13 @@ from rest_framework.status import (
                                    HTTP_400_BAD_REQUEST
                                    )
 
-from user.models import User, OnlineUser
-from user.serializers import UserSerializer, UserProfileSerializer, OnlineUserSerializer
+from user.models import User, UserLiveLocation, OnlineUser
+from user.serializers import (
+    UserSerializer,
+    UserProfileSerializer,
+    UserLiveLocationSerializer,
+    OnlineUserSerializer
+    )
 from Cabrooz_App.utils import create_message, get_default_param, get_distance
 
 
@@ -111,13 +116,13 @@ class UserController:
             print("USER PROFILE EXCEPTION", e)
             return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', e))
 
-    def update_user_online(self, request):
+    def update_user_location(self, request):
         try:
             request.POST._META = True
-            user_id = get_default_param(request, 'user', None)
-            longitude = get_default_param(request, 'current_longitude', None)
-            latitude = get_default_param(request, 'current_latitude', None)
-            user = OnlineUser.objects.filter(user_id=user_id).last()
+            user_id = request.data.get('user')
+            longitude = request.data.get('current_longitude')
+            latitude = request.data.get('current_latitude')
+            user = UserLiveLocation.objects.filter(user_id=user_id).last()
             if user:
                 try:
                     distance = get_distance(latitude, longitude, user.current_latitude, user.current_longitude)
@@ -126,7 +131,7 @@ class UserController:
                     print("DISTANCE CALCULATION EXCEPTION", e)
                 request.data['distance'] = distance
                 request.POST._mutable = False
-                serialized_online_user = OnlineUserSerializer(data=request.data)
+                serialized_online_user = UserLiveLocationSerializer(data=request.data)
                 if serialized_online_user.is_valid():
                     serialized_online_user.save()
                     return Response(create_message(HTTP_201_CREATED, 'Success', serialized_online_user.data))
@@ -134,7 +139,7 @@ class UserController:
                     raise Exception
             request.data['distance'] = 0
             request.POST._mutable = False
-            serialized_online_user = OnlineUserSerializer(data=request.data)
+            serialized_online_user = UserLiveLocationSerializer(data=request.data)
             if serialized_online_user.is_valid():
                 serialized_online_user.save()
                 return Response(create_message(HTTP_201_CREATED, 'Success', serialized_online_user.data))
@@ -142,5 +147,32 @@ class UserController:
                 print(serialized_online_user.errors)
                 raise Exception
         except Exception as e:
-            print("ONLINE USER UPDATE EXCEPTION", e)
+            print("USER UPDATE LOCATION EXCEPTION", e)
+            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', e))
+
+    def update_online_user(self, request):
+        try:
+            user_id = request.data.get('user')
+            try:
+                user = OnlineUser.objects.get(user_id=user_id)
+                serialized_user = OnlineUserSerializer(user, data=request.data, partial=True)
+                if serialized_user.is_valid():
+                    serialized_user.save()
+                    return Response(create_message(HTTP_201_CREATED, 'Success', "User location updated"))
+                else:
+                    print("USER LOCATION EXISTS BUT ERROR IN UPDATE")
+                    print(serialized_user.errors)
+                    return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', "User location not updated"))
+            except:
+                serialized_user = OnlineUserSerializer(data=request.data)
+                if serialized_user.is_valid():
+                    serialized_user.save()
+                    return Response(create_message(HTTP_200_OK, 'Success', "User location updated"))
+                else:
+                    print("USER LOCATION CREATED ERROR")
+                    print(serialized_user.errors)
+                    return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', "User location not updated"))
+
+        except Exception as e:
+            print("UPDATE ONLINE USER EXCEPTION", e)
             return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', e))

@@ -48,7 +48,7 @@ class UserWallet(models.Model):
         return self.user.name + " " + self.amount
 
 
-class OnlineUser(models.Model):
+class UserLiveLocation(models.Model):
     user = models.ForeignKey(User, on_delete=DO_NOTHING, blank=True, null=True)
     is_online = models.BooleanField(max_length=200, default=False, blank=True, null=True)
     current_longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
@@ -56,6 +56,22 @@ class OnlineUser(models.Model):
     created_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     distance = models.CharField(max_length=200, null=True, blank=True)
     type = models.ForeignKey(Option, null=True, blank=True, on_delete=DO_NOTHING)
+    country = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.user.name
+
+
+class OnlineUser(models.Model):
+    user = models.OneToOneField(User, on_delete=DO_NOTHING, blank=True, null=True)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    type = models.ForeignKey(Option, null=True, blank=True, on_delete=DO_NOTHING)
+    is_online = models.BooleanField(default=False, null=True, blank=True)
+    country = models.CharField(max_length=200, null=True, blank=True)
+
+    def __str__(self):
+        return self.user.name
+

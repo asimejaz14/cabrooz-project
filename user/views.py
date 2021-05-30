@@ -70,9 +70,17 @@ class UserProfileAPIView(APIView):
         return self.user_controller_obj.get_user_profile(request)
 
 
+class UserLiveLocationAPIVIEW(APIView):
+    permission_classes = [IsAuthenticated]
+    user_controller_obj = UserController()
+
+    def post(self, request):
+        return self.user_controller_obj.update_user_location(request)
+
+
 class OnlineUserAPIVIEW(APIView):
     permission_classes = [IsAuthenticated]
     user_controller_obj = UserController()
 
     def post(self, request):
-        return self.user_controller_obj.update_user_online(request)
+        return self.user_controller_obj.update_online_user(request)
