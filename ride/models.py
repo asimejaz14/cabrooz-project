@@ -35,7 +35,7 @@ class Ride(models.Model):
 
 
 class RideRequest(models.Model):
-    rider = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='rider', null=True, blank=True, on_delete=DO_NOTHING)
+    rider = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_id', null=True, blank=True, on_delete=DO_NOTHING)
     estimated_fare = models.CharField(max_length=200, null=True, blank=True)
     pick_up_location = models.CharField(max_length=200, null=True, blank=True)
     drop_off_location = models.CharField(max_length=200, null=True, blank=True)
@@ -48,7 +48,3 @@ class RideRequest(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     expiry_time = models.DateTimeField(null=True, blank=True)
-
-    def save(self, *args, **kwargs):
-        self.expiry_time = self.created_at + timedelta()
-        super(User, self).save(*args, **kwargs)
