@@ -73,5 +73,5 @@ class OnlineUser(models.Model):
     country = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
-        return self.user.name
+        return self.user.first_name
 

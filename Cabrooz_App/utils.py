@@ -40,4 +40,8 @@ def get_distance(first_lat=52.2296756, first_long=21.0122287, second_lat=52.4063
     coords_1 = (52.2296756, 21.0122287)
     coords_2 = (52.406374, 16.9251681)
 
-    return geodesic(coords_1, coords_2).meters or 0
+    # distance in meters
+    distance = geodesic(coords_1, coords_2).meters or 0
+    print(distance)
+
+    return distance
