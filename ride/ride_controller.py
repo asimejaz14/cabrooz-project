@@ -58,6 +58,7 @@ class RideController:
             # serialized_drivers = UserProfileSerializer(drivers_distances, many=True)
             # return Response(create_message(HTTP_200_OK, 'Success', serialized_drivers.data))
             request.POST._mutable = True
+            request.data['user'] = request.user.id
             request.data['expiry_time'] = timezone.now().replace(minute=timezone.now().minute + 1)
             request.POST._mutable = False
             serialized_ride_request = RideRequestSerializer(data=request.data)
