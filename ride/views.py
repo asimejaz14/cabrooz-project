@@ -9,7 +9,7 @@ class RideAPIView(APIView):
     ride_controller_obj = RideController()
 
     def get(self, request):
-        ...
+        return self.ride_controller_obj.get_ride_request(request)
 
     def post(self, request):
-        return self.ride_controller_obj.generate_ride_request(request)
+        return self.ride_controller_obj.create_ride_request(request)

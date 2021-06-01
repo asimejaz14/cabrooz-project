@@ -3,7 +3,8 @@ from rest_framework.status import (
                                    HTTP_404_NOT_FOUND,
                                    HTTP_201_CREATED,
                                    HTTP_200_OK,
-                                   HTTP_400_BAD_REQUEST
+                                   HTTP_400_BAD_REQUEST,
+                                   HTTP_500_INTERNAL_SERVER_ERROR
                                    )
 
 from Cabrooz_App.utils import create_message, get_default_param
@@ -39,11 +40,11 @@ class VehicleController:
                 return Response(create_message(HTTP_201_CREATED, 'Success', "Vehicle record created."))
             else:
                 print(serialized_vehicle.errors)
-                raise Exception
+                return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', "Vehicle record not created."))
 
         except Exception as e:
             print("VEHICLE NOT ADDED EXCEPTION", e)
-            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', "Vehicle record not created."))
+            return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', "Vehicle record not created."))
 
     def update_vehicle_record(self, request, id):
         try:
@@ -57,10 +58,10 @@ class VehicleController:
                 return Response(create_message(HTTP_201_CREATED, 'Success', "Vehicle record updated."))
             else:
                 print(serialized_vehicle.errors)
-                raise Exception
+                return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', "Vehicle record not updated."))
         except Exception as e:
             print("VEHICLE NOT UPDATED EXCEPTION", e)
-            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', "Vehicle record not updated."))
+            return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', "Vehicle record not updated."))
 
     def delete_vehicle_record(self, request):
         try:
@@ -71,7 +72,7 @@ class VehicleController:
             vehicle_record = Vehicle.objects.get(pk=record_id)
             vehicle_record.status = 2
             vehicle_record.save()
-            return Response(create_message(HTTP_400_BAD_REQUEST, 'Success', "Vehicle record deleted."))
+            return Response(create_message(HTTP_200_OK, 'Success', "Vehicle record deleted."))
         except Exception as e:
             print("VEHICLE NOT UPDATED EXCEPTION", e)
-            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', "Vehicle record not deleted."))
+            return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', "Vehicle record not deleted."))

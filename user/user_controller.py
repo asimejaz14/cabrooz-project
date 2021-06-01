@@ -4,7 +4,8 @@ from rest_framework.status import (
                                    HTTP_404_NOT_FOUND,
                                    HTTP_201_CREATED,
                                    HTTP_200_OK,
-                                   HTTP_400_BAD_REQUEST
+                                   HTTP_400_BAD_REQUEST,
+                                   HTTP_500_INTERNAL_SERVER_ERROR
                                    )
 
 from user.models import User, UserLiveLocation, OnlineUser
@@ -36,7 +37,7 @@ class UserController:
             return Response(create_message(HTTP_200_OK, 'Success', serialized_user.data))
         except Exception as e:
             print("USER LISTING EXCEPTION", e)
-            return Response(create_message(HTTP_404_NOT_FOUND, 'Error', 'User not found'))
+            return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', 'User not found'))
 
 
     def update_user(self, request, id):
@@ -58,7 +59,7 @@ class UserController:
 
         except Exception as e:
             print("User Not Updated", e)
-            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', 'User not updated'))
+            return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', 'User not updated'))
 
     def delete_user(self, request):
         try:
@@ -73,7 +74,7 @@ class UserController:
                 return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', 'User not deleted'))
         except Exception as e:
             print("User Not Deleted", e)
-            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', 'User not deleted'))
+            return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', 'User not deleted'))
 
 
     def user_signup(self, request):
@@ -91,12 +92,11 @@ class UserController:
                 return Response(create_message(HTTP_201_CREATED, 'Success', serialized_user.data))
             else:
                 print("User Not Added")
-
                 print(serialized_user.errors)
                 return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', 'User not created'))
         except Exception as e:
             print("User Not Added", e)
-            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', 'User not created'))
+            return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', 'User not created'))
 
     def user_logout(self, request):
         try:
@@ -104,7 +104,7 @@ class UserController:
             return Response(create_message(HTTP_200_OK, 'Success', 'User logged out successfully'))
         except Exception as e:
             print("USER LOGOUT EXCEPTION", e)
-            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', 'User not logged out'))
+            return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', 'User not logged out'))
 
     def get_user_profile(self, request):
         try:
@@ -114,7 +114,7 @@ class UserController:
             return Response(create_message(HTTP_200_OK, 'Success', serialized_user.data))
         except Exception as e:
             print("USER PROFILE EXCEPTION", e)
-            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', e))
+            return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', e))
 
     def update_user_location(self, request):
         try:
@@ -148,7 +148,7 @@ class UserController:
                 raise Exception
         except Exception as e:
             print("USER UPDATE LOCATION EXCEPTION", e)
-            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', e))
+            return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', e))
 
     def update_online_user(self, request):
         try:
@@ -175,4 +175,4 @@ class UserController:
 
         except Exception as e:
             print("UPDATE ONLINE USER EXCEPTION", e)
-            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', e))
+            return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', e))

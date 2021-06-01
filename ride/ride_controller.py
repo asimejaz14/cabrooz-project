@@ -6,12 +6,15 @@ HTTP_200_OK,
 HTTP_400_BAD_REQUEST,
 HTTP_201_CREATED,
 HTTP_404_NOT_FOUND,
+HTTP_500_INTERNAL_SERVER_ERROR
 )
 
 from operator import itemgetter
+from django.utils import timezone
 
 from Cabrooz_App.utils import create_message, get_distance
 from Cabrooz_App import enums
+from ride.serializers import RideRequestSerializer
 from user.models import OnlineUser, User
 from user.serializers import UserProfileSerializer
 
@@ -36,7 +39,16 @@ class RideController:
         except Exception as e:
             print("NEAREST DRIVER EXCEPTION", e)
 
-    def generate_ride_request(self, request):
+
+    def get_ride_request(self, request):
+        try:
+            ...
+        except Exception as e:
+            print("GET RIDE REQUEST EXCEPTION", e)
+            return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', e))
+
+
+    def create_ride_request(self, request):
         try:
             # drivers_distances = self.get_online_drivers_distance(request)
             # drivers_distances.sort(key=itemgetter(1))
@@ -44,8 +56,18 @@ class RideController:
             #     print(d)
             # serialized_drivers = UserProfileSerializer(drivers_distances, many=True)
             # return Response(create_message(HTTP_200_OK, 'Success', serialized_drivers.data))
-            return Response(create_message(HTTP_200_OK, 'Success', {}))
+            request.POST._mutable = True
+            request.data['created_at'] = timezone.now()
+            request.data['expiry_time'] = request.data['created_at'].replace(minute=request.data['created_at'].minute + 1)
+            request.POST._mutable = False
+            serialized_ride_request = RideRequestSerializer(data=request.data)
+            if serialized_ride_request.is_valid():
+                serialized_ride_request.save()
+                return Response(create_message(HTTP_201_CREATED, 'Success', "Ride Request Created"))
+            else:
+                print(serialized_ride_request.errors)
+            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', serialized_ride_request.errors))
 
         except Exception as e:
             print("RIDE REQUEST EXCEPTION", e)
-            return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', e))
+            return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', e))
