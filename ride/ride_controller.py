@@ -90,6 +90,7 @@ class RideController:
             ride_request = RideRequest.objects.get(pk=id)
             if ride_request.ride_status == enums.ACCEPTED:
                 return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', "Ride already taken"))
+
             ride_request.ride_status = enums.ACCEPTED
             ride_request.save()
 
