@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'option',
     'vehicle',
     'ride',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -177,6 +178,11 @@ CORS_ALLOW_METHODS = [
     'PUT',
 ]
 
+
+CRONJOBS = [
+    # format 1
+    ('*/1 * * * *', 'ride.cron.process_active_ride_request', '>> /home/cabrooz_cron_jobs/process_ride_expiry.log'),
+]
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')

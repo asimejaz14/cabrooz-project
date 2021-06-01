@@ -52,4 +52,4 @@ class RideRequest(models.Model):
     expiry_time = models.DateTimeField(null=True, blank=True)
     online_offline = models.ForeignKey(Option, null=True, blank=True, related_name='riderequest_online_offline', on_delete=DO_NOTHING)
     vehicle_category = models.ForeignKey(Option, null=True, blank=True, related_name='riderequest_vehicle_category', on_delete=DO_NOTHING)
-    is_expired = models.BooleanField(default=False, null=True, blank=True)
+    is_alive = models.BooleanField(default=False, null=True, blank=True)

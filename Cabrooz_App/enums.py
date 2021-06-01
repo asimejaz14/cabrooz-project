@@ -20,3 +20,4 @@ LUXURY = 10
 # Country
 PAKISTAN = 12
 ALGERIA = 13
+
