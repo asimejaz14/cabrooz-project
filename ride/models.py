@@ -53,3 +53,4 @@ class RideRequest(models.Model):
     online_offline = models.ForeignKey(Option, null=True, blank=True, related_name='riderequest_online_offline', on_delete=DO_NOTHING)
     vehicle_category = models.ForeignKey(Option, null=True, blank=True, related_name='riderequest_vehicle_category', on_delete=DO_NOTHING)
     is_alive = models.BooleanField(default=False, null=True, blank=True)
+

@@ -57,6 +57,7 @@ class UserLiveLocation(models.Model):
     distance = models.CharField(max_length=200, null=True, blank=True)
     type = models.ForeignKey(Option, null=True, blank=True, on_delete=DO_NOTHING)
     country = models.CharField(max_length=200, null=True, blank=True)
+    on_ride = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
         return self.user.name
@@ -71,6 +72,8 @@ class OnlineUser(models.Model):
     type = models.ForeignKey(Option, null=True, blank=True, on_delete=DO_NOTHING)
     is_online = models.BooleanField(default=False, null=True, blank=True)
     country = models.CharField(max_length=200, null=True, blank=True)
+    on_ride = models.BooleanField(default=False, null=True, blank=True)
+
 
     def __str__(self):
         return self.user.first_name

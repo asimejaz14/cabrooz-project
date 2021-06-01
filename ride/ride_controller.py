@@ -14,6 +14,7 @@ from django.utils import timezone
 
 from Cabrooz_App.utils import create_message, get_distance
 from Cabrooz_App import enums
+from ride.models import RideRequest
 from ride.serializers import RideRequestSerializer
 from user.models import OnlineUser, User
 from user.serializers import UserProfileSerializer
@@ -57,8 +58,7 @@ class RideController:
             # serialized_drivers = UserProfileSerializer(drivers_distances, many=True)
             # return Response(create_message(HTTP_200_OK, 'Success', serialized_drivers.data))
             request.POST._mutable = True
-            request.data['created_at'] = timezone.now()
-            request.data['expiry_time'] = request.data['created_at'].replace(minute=request.data['created_at'].minute + 1)
+            request.data['expiry_time'] = timezone.now().replace(minute=timezone.now().minute + 1)
             request.POST._mutable = False
             serialized_ride_request = RideRequestSerializer(data=request.data)
             if serialized_ride_request.is_valid():
@@ -70,4 +70,25 @@ class RideController:
 
         except Exception as e:
             print("RIDE REQUEST EXCEPTION", e)
+            return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', e))
+
+    def get_active_ride_requests(self, request):
+        try:
+            ride_requests = RideRequest.objects.filter(is_alive=True, on_ride=False).latest('-created_at')
+            serialized_ride_requests = RideRequestSerializer(ride_requests)
+            return Response(create_message(HTTP_200_OK, "Success", serialized_ride_requests.data))
+        except Exception as e:
+            print("ACTIVE RIDE REQUESTS")
+            return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', e))
+
+
+    def update_ride_request(self, request, id):
+        try:
+            ride_request = RideRequest.objects.get(pk=id)
+            ride_request.on_ride = True
+            ride_request.save()
+
+            return Response(create_message(HTTP_200_OK, 'Success', "Ride Accepted"))
+        except Exception as e:
+            print("UPDATE RIDE REQUESTS")
             return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', e))
