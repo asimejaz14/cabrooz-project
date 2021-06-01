@@ -11,6 +11,7 @@ IN_PROGRESS = 5
 COMPLETED = 6
 CANCELED = 7
 EXPIRED = 11
+PENDING = 14
 
 # Vehicle Category
 MINI = 8
@@ -21,3 +22,6 @@ LUXURY = 10
 PAKISTAN = 12
 ALGERIA = 13
 
+# Ride Status Online/Offline
+ONLINE = 16
+OFFLINE = 17

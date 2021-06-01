@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'vehicle',
     'ride',
     'django_crontab',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [

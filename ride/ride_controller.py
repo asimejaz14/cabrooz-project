@@ -74,9 +74,11 @@ class RideController:
 
     def get_active_ride_requests(self, request):
         try:
-            ride_requests = RideRequest.objects.filter(is_alive=True, on_ride=False).latest('-created_at')
-            serialized_ride_requests = RideRequestSerializer(ride_requests)
-            return Response(create_message(HTTP_200_OK, "Success", serialized_ride_requests.data))
+            ride_requests = RideRequest.objects.filter(is_alive=True, ride_status_id=enums.PENDING).latest('-created_at')
+            if ride_requests:
+                serialized_ride_requests = RideRequestSerializer(ride_requests)
+                return Response(create_message(HTTP_200_OK, "Success", serialized_ride_requests.data))
+            return Response(create_message(HTTP_200_OK, "Success", "No alive ride requests"))
         except Exception as e:
             print("ACTIVE RIDE REQUESTS")
             return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', e))
