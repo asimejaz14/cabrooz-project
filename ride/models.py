@@ -32,6 +32,8 @@ class Ride(models.Model):
     drop_off_latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     drop_off_longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     ride_status = models.ForeignKey(Option, on_delete=DO_NOTHING, null=True, blank=True)
+    online_offline = models.ForeignKey(Option, null=True, blank=True, on_delete=DO_NOTHING)
+    vehicle_category = models.ForeignKey(Option, null=True, blank=True, on_delete=DO_NOTHING)
 
 
 class RideRequest(models.Model):
@@ -48,3 +50,5 @@ class RideRequest(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     expiry_time = models.DateTimeField(null=True, blank=True)
+    online_offline = models.ForeignKey(Option, null=True, blank=True, on_delete=DO_NOTHING)
+    vehicle_category = models.ForeignKey(Option, null=True, blank=True, on_delete=DO_NOTHING)
