@@ -6,6 +6,9 @@ from .models import RideRequest
 def process_active_ride_request():
     try:
         active_rides = RideRequest.objects.filter(is_alive=True)
+        if not active_rides:
+            print("NO ACTIVE RIDE RECORDS FOUND")
+            return
         for ride in active_rides:
             if ride.expiry_time >= timezone.now():
                 ride.is_alive = False
