@@ -13,11 +13,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='onlineuser',
             name='current_latitude',
-            field=models.DecimalField(blank=True, decimal_places=19, max_digits=10, null=True),
+            field=models.DecimalField(blank=True, decimal_places=10, max_digits=10, null=True),
         ),
         migrations.AlterField(
             model_name='onlineuser',
             name='current_longitude',
-            field=models.DecimalField(blank=True, decimal_places=19, max_digits=10, null=True),
+            field=models.DecimalField(blank=True, decimal_places=10, max_digits=10, null=True),
         ),
     ]

@@ -18,8 +18,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('is_online', models.BooleanField(blank=True, default=False, max_length=200, null=True)),
-                ('current_longitude', models.DecimalField(blank=True, decimal_places=19, max_digits=19, null=True)),
-                ('current_latitude', models.DecimalField(blank=True, decimal_places=19, max_digits=19, null=True)),
+                ('current_longitude', models.DecimalField(blank=True, decimal_places=10, max_digits=19, null=True)),
+                ('current_latitude', models.DecimalField(blank=True, decimal_places=10, max_digits=19, null=True)),
                 ('last_online_time', models.DateTimeField(auto_now=True, null=True)),
                 ('distance', models.CharField(blank=True, max_length=200, null=True)),
                 ('type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.DO_NOTHING, to='option.option')),
