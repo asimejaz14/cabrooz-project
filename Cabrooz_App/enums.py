@@ -12,6 +12,7 @@ COMPLETED = 6
 CANCELED = 7
 EXPIRED = 11
 PENDING = 14
+ACCEPTED = 19
 
 # Vehicle Category
 MINI = 8
