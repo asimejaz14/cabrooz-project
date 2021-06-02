@@ -29,5 +29,5 @@ class RideRequestAPIView(APIView):
     permission_classes = [IsAuthenticated]
     ride_controller_obj = RideController()
 
-    def post(self, request):
+    def patch(self, request):
         return self.ride_controller_obj.update_ride_request(request, id=None)
