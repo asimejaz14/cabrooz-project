@@ -93,7 +93,7 @@ class UserController:
             else:
                 print("User Not Added")
                 print(serialized_user.errors)
-                return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', 'User not created'))
+                return Response(create_message(HTTP_400_BAD_REQUEST, 'Error', serialized_user.errors))
         except Exception as e:
             print("User Not Added", e)
             return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', 'User not created'))
