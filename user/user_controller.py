@@ -176,3 +176,4 @@ class UserController:
         except Exception as e:
             print("UPDATE ONLINE USER EXCEPTION", e)
             return Response(create_message(HTTP_500_INTERNAL_SERVER_ERROR, 'Error', e))
+        # 123
