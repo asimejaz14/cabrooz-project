@@ -1,9 +1,17 @@
 import os
 
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from .models import User
+from .models import User, UserWallet, UserLiveLocation, OnlineUser
 
 from Cabrooz_App import settings
+
+
+class UserWalletSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserWallet
+        fields = '__all__'
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,6 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
     license_back = serializers.SerializerMethodField(required=False)
     type_id = serializers.CharField(max_length=200, allow_null=True, allow_blank=True)
     status_id = serializers.CharField(max_length=200, allow_null=True, allow_blank=True)
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
 
     def get_profile_picture(self, obj):
         try:
@@ -165,5 +174,26 @@ class UserSerializer(serializers.ModelSerializer):
             'cnic_back',
             'license_front',
             'license_back',
+            'password',
         ]
 
+
+class UserProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        exclude = ['password', 'user_permissions', 'groups', 'is_staff', 'is_active']
+
+
+class UserLiveLocationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserLiveLocation
+        fields = '__all__'
+
+
+class OnlineUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OnlineUser
+        fields = '__all__'
